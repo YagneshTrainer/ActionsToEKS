@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: statefull-reviewdb
+spec:
+  selector:
+    matchLabels:
+      app: reviewdb
+  serviceName: mysql-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: reviewdb
+    spec:
+      containers:
+      - name: reviewdb
+        image: innovativeacademy/reviewdb:V1
+        ports:
+        - containerPort: 3306
+          name: db
+        volumeMounts:
+        - name: mysql-pvc
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-pvc
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
