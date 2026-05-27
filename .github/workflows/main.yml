@@ -34,3 +34,18 @@ jobs:
       
       - name: Push Docker Image
         run: docker push  ${{ secrets.DOCKER_USERNAME }}/reviewapp:${{ github.run_number }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with: 
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ap-south-1
+      
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name cicd-lab --region ap-south-1
+
+      - name: Deploy to EKS
+        run: |
+          kubectl set image deployment/reviewapp-dep \
+          reviewapp=${{ secrets.DOCKER_USERNAME }}/reviewapp:${{ github.run_number }}

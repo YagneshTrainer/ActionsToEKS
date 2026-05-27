@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: reviewapp
-        image: innovativeacademy/bluereviewapp:V1
+        image: innovativeacademy/reviewapp:V1
         resources:
           requests: 
             memory: "250Mi"
